@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  master:
+    hostname: amq-master.amq-cluster.svc
+    build:
+      dockerfile: ha-master.dockerfile
+      context: .
+    networks:
+      artemis-cluster-network:
+        ipv4_address: 172.20.0.100
+    ports:
+      - 8161:8161
+      - 61616:61616
+  slave:
+    hostname: amq-slave.amq-cluster.svc
+    build:
+      dockerfile: ha-slave.dockerfile
+      context: .
+    networks:
+      artemis-cluster-network:
+        ipv4_address: 172.20.0.101
+    ports:
+      - 8162:8162
+      - 61617:61617
+
+
+networks:
+  artemis-cluster-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
